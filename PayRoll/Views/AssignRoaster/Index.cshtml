@@ -1,0 +1,109 @@
+﻿@model PayRoll.ViewModel.AssignRoasterVM
+@{
+    ViewBag.Title = "Index";
+}
+<div class="content-wrapper">
+
+    <!-- Container-fluid starts -->
+    <!-- Main content starts -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="main-header">
+            </div>
+        </div>
+        <div id="mydiv" class="col-md-3">
+            <p class="text-center bg-success">@TempData["Update"]</p>
+            <p class="text-center bg-danger">@TempData["Duplicate"]</p>
+        </div>
+        <div class="col-lg-12">
+            <a href="@Url.Action("Create","AssignRoaster")" class="btn btn-skype offset-lg-10"><i class="fa fa-plus"></i>  Create New</a>
+            <div class="card" style="margin-top:20px">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-header-text"><u>Assigned Roasters</u></h5>
+                            </div>
+                            <div class="card-block">
+                                <table id="advanced-table" class="table dt-responsive table-striped table-bordered nowrap">
+                                    <thead>
+                                        <tr>
+                                            <th>Roaster Name</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Roaster Name</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </tfoot>
+                                    <tbody>
+                                        @foreach (var lst in Model.AssignRoasterVMQList)
+                                        {
+                                        <tr>
+                                            <td>@lst.RoasterName</td>
+                                            <td style="width:30px; text-align:left;">
+                                                <a href="@Url.Action("Edit", new { id = lst.Roasterid })" class="badge badge-primary" data-toggle="tooltip" data-placement="left" title="Click Me To Edit"><i class="fa fa-pencil"></i></a>
+                                                <a herf="#" class="badge badge-warning" data-toggle="modal" data-target="#myModal-@lst.Roasterid"><i style="color:white" class="fa fa-jsfiddle"></i></a>
+                                                <div class="modal" id="myModal-@lst.Roasterid">
+                                                    <div class="modal-dialog modal-lg">
+                                                        <div class="modal-content">
+                                                            <!-- Modal Header -->
+                                                            <div class="modal-header">
+                                                                <h4 class="modal-title text-center" style="color:white;background-color:#00AFF0">Assigned Roaster Detail</h4>
+                                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                            </div>
+                                                            <!-- Modal body -->
+                                                            <div class="modal-body">
+                                                                <table class="table table-bordered">
+
+                                                                    <thead class="bordered-darkorange">
+                                                                        <tr>
+                                                                            <th>Day Name</th>
+                                                                            <th>Shift Name</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        @foreach (var lsts in Model.AssignsRoasterVMQList)
+                                                                        {
+                                                                            if (lst.Roasterid == lsts.Roasterid)
+                                                                            {
+                                                                                <tr>
+                                                                                    <td>@lsts.Day</td>
+                                                                                    <td>@lsts.ShiftName</td>
+                                                                                </tr>
+                                                                            }
+                                                                        }
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                            <!-- Modal footer -->
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- Main content ends -->
+    <!-- Container-fluid ends -->
+</div>
+
+<script>
+    setTimeout(function () {
+        $('#mydiv').fadeOut('fast');
+    }, 3000); // <-- time in milliseconds
+</script>

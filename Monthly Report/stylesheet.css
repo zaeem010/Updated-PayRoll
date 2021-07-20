@@ -1,0 +1,35 @@
+#header{
+	width: auto;
+	text-align: center;
+	height: 60px;
+}
+#div1{
+	float: left;
+	width: auto;
+	margin-right: 50%;
+	margin-left: 2%;
+}
+#div2{
+	float: left;
+	width: auto;
+	
+
+}
+#div3{
+	float: right;
+	width: auto;
+	
+
+}
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+td{
+	text-align: center;
+}
+
+.tab1{
+	width: 50%;
+	align-content: center;
+}

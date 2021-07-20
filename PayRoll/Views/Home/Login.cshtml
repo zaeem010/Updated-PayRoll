@@ -1,0 +1,103 @@
+﻿@model PayRoll.ViewModel.LoginVM
+@{Layout = null;}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Pay Roll</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="icon" type="image/png" href="~/Content/Login/images/icons/favicon.ico" />
+
+    <link rel="stylesheet" type="text/css" href="~/Content/Login/vendor/bootstrap/css/bootstrap.min.css">
+
+    <link rel="stylesheet" type="text/css" href="~/Content/Login/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" type="text/css" href="~/Content/Login/vendor/animate/animate.css">
+
+    <link rel="stylesheet" type="text/css" href="~/Content/Login/vendor/css-hamburgers/hamburgers.min.css">
+
+    <link rel="stylesheet" type="text/css" href="~/Content/Login/vendor/animsition/css/animsition.min.css">
+
+    <link rel="stylesheet" type="text/css" href="~/Content/Login/vendor/select2/select2.min.css">
+
+    <link rel="stylesheet" type="text/css" href="~/Content/Login/vendor/daterangepicker/daterangepicker.css">
+
+    <link rel="stylesheet" type="text/css" href="~/Content/Login/css/util.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/Login/css/main.css">
+
+</head>
+<body>
+    <div class="limiter">
+        <div class="container-login100">
+            <div class="wrap-login100">
+                @using (Html.BeginForm("Login", "Home", FormMethod.Post, new { enctype = "multipart/form-data", @class = "login100-form validate-form p-l-55 p-r-55 p-t-178" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <span class="login100-form-title">
+                        Sign In
+                    </span>
+                    <div class="wrap-input100 validate-input m-b-16" data-validate="Please enter username">
+                        @Html.DropDownListFor(m => m.UserLogin.Comid, new SelectList(Model.BranchList, "id", "Name"), "Select", htmlAttributes: new { @class = "form-control  input100", @required = "true" })
+                        <span class="focus-input100"></span>
+                    </div>
+                    <div class="wrap-input100 validate-input m-b-16" data-validate="Please enter username">
+                        @Html.TextBoxFor(m => m.UserLogin.UserName, new { @class = "input100", @required = "required", @placeholder = "Username", })
+                        <span class="focus-input100"></span>
+                    </div>
+                    <div class="wrap-input100 validate-input" data-validate="Please enter password">
+                        @Html.TextBoxFor(m => m.UserLogin.Password, new { @class = "input100", @type = "Password", @placeholder = "Password", @required = "required" })
+                        <span class="focus-input100"></span>
+                    </div>
+                    @*<div class="text-right p-t-13 p-b-23">
+                <span class="txt1">
+                    Forgot
+                </span>
+                <a href="#" class="txt2">
+                    Username / Password?
+                </a>
+            </div>*@
+                    <br />
+                    <br />
+                    <div class="container-login100-form-btn">
+                        <button class="login100-form-btn" type="submit">
+                            Sign in
+                        </button>
+                    </div>
+
+                    <br />
+                    <br />
+                    <p class="text-center bg-danger" style="color:white">@TempData["Invalid"]</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <script src="~/Content/Login/vendor/jquery/jquery-3.2.1.min.js"></script>
+
+    <script src="~/Content/Login/vendor/animsition/js/animsition.min.js"></script>
+
+    <script src="~/Content/Login/vendor/bootstrap/js/popper.js"></script>
+    <script src="~/Content/Login/vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    <script src="~/Content/Login/vendor/select2/select2.min.js"></script>
+
+    <script src="~/Content/Login/vendor/daterangepicker/moment.min.js"></script>
+    <script src="~/Content/Login/vendor/daterangepicker/daterangepicker.js"></script>
+
+    <script src="~/Content/Login/vendor/countdowntime/countdowntime.js"></script>
+
+    <script src="~/Content/Login/js/main.js"></script>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-23581568-13');
+    </script>
+    <script defer src="~/Content/Login/js/beacon.min.js" data-cf-beacon='{"rayId":"626b2049ca42d187","version":"2021.2.0","si":10}'></script>
+</body>
+</html>

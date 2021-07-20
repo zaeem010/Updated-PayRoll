@@ -1,0 +1,407 @@
+﻿@model PayRoll.ViewModel.EmployeeVM
+@{
+    ViewBag.Title = "Create";
+}
+<style>
+    select:invalid 
+    {
+        height: 6px !important;
+        opacity: 0 !important;
+        position: absolute !important;
+        display: flex !important;
+        width: 290px;
+    }
+</style>
+<div class="content-wrapper">
+
+    <!-- Container-fluid starts -->
+    <!-- Main content starts -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="main-header">
+            </div>
+        </div>
+        <div id="mydiv" class="col-md-6">
+            <p class="text-center bg-success">@TempData["Insert"]</p>
+            <p class="text-center bg-danger">@TempData["Dup"]</p>
+        </div>
+        <div class="col-lg-12">
+            <a href="@Url.Action("Index","Employee")" class="btn btn-skype offset-lg-10"><i class="fa fa-list"></i> Employees List</a>
+            <div class="card" style="margin-top:20px">
+                <div class="card-header">
+                    <h5 class="card-header-text"><u>Employees Personal Info</u></h5>
+                </div>
+                <div class="card-block">
+                    @using (Html.BeginForm("Save", "Employee", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                    <div class="row" style="margin-top:-20px">
+                        <input type="hidden" name="Gene" value="@Model.Employee.GeneCode" id="Gene" />
+                        <input type="hidden" name="name" value="" id="Bcode" />
+                        <div class="col-md-3 ">
+                            <label>Image</label>
+                            @if (Model.Employee.Image == null || Model.Employee.Image == "")
+                            {
+                                <img id="output" height="90" width="90" style="border:thin;margin-top:20px" class="img-fluid" src="~/Uploads/demo.jpg" />
+                            }
+                            else
+                            {
+                                <img id="output" height="90" width="90" style="border:thin;margin-top:20px" class="img-fluid" src="~/Uploads/@Model.Employee.Image" />
+                            }
+                            <input type="file" name="img" class="form-control" onchange="loadFile(event)" />
+
+                        </div>
+                    </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Cnic &nbsp;&nbsp;<i class="fa fa-star" style="color:red"></i></label>
+                                @Html.TextBoxFor(m => m.Employee.Cnic, new { @class = "form-control thresold-i", @required = "true", @placeholder = "00000-0000000-0", autocomplete = "off", @id = "cnic", @maxlength = "15" })
+                            </div>
+                            <div class="col-md-4">
+                                <label>Branch &nbsp;&nbsp;<i class="fa fa-star" style="color:red"></i></label>
+                                @if (Model.Employee.id == 0)
+                                {
+                                    @Html.DropDownListFor(m => m.Employee.Branchid, new SelectList(Model.BranchList, "id", "Name"), "Select Branch", htmlAttributes: new { @class = "chosen-select form-control", onchange = "GetCode(this.value); GetNum(this.value); Final(this.value);", @required = "true" })
+                                }
+                                else
+                                {
+                                    @Html.DropDownListFor(m => m.Employee.Branchid, new SelectList(Model.BranchList, "id", "Name"), "Select Branch", htmlAttributes: new { @class = "chosen-select form-control",@disabled="true" })
+                                }
+                            </div>
+                            @*<div class="col-md-3">
+                                <label>Emp Code</label>
+                                @Html.TextBoxFor(m => m.Employee.EmpCode, new { @class = "form-control thresold-i", @readonly = "true",id= "EmpCodes" })
+                            </div>*@
+                            <div class="col-md-4">
+                                <label>Title</label>
+                                @Html.DropDownListFor(m => m.Employee.Title, new SelectList(new List<Object> { new { value = "Mr.", text = "Mr." }, new { value = "Ms.", text = "Ms." }, new { value = "Mrs.", text = "Mrs." } }, "value", "text"), new { @class = "form-control chosen-select" })
+                            </div>
+                            </div>
+                            <div class="row">
+                            <div class="col-md-3 top">
+                                <label>Employee Name &nbsp;&nbsp;<i class="fa fa-star" style="color:red"></i></label>
+                                @Html.TextBoxFor(m => m.Employee.Name, new { @class = "form-control thresold-i", @placeholder = "" , @required = "true" })
+                            </div>
+                            <div class="col-md-3 top">
+                                <label>Father Name</label>
+                                @Html.TextBoxFor(m => m.Employee.FName, new { @class = "form-control thresold-i", @placeholder = "", })
+                            </div>
+                            <div class="col-md-3 top">
+                                <label>Date Of Birth</label>
+                                @Html.TextBoxFor(m => m.Employee.DOB, new { @class = "form-control thresold-i", @type = "date", id = "date" })
+                            </div>
+                            <div class="col-md-3 top">
+                                <label>Gender</label>
+                                @Html.DropDownListFor(m => m.Employee.Gender, new SelectList(new List<Object> { new { value = "Male", text = "Male" }, new { value = "Fe-Male", text = "Fe-Male" } }, "value", "text"), new { @class = "form-control chosen-select" })
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 top">
+                                <label><b>Select Blood Group</b></label>
+                                @Html.DropDownListFor(m => m.Employee.BloodGroup, new SelectList(new List<Object> { new { value = "", text = "Select Blood Group" }, new { value = "O-", text = "O-" }, new { value = "O+", text = "O+" }, new { value = "A-", text = "A-" }, new { value = "A+", text = "A+" }, new { value = "B+", text = "B+" }, new { value = "B-", text = "B-" }, new { value = "AB-", text = "AB-" }, new { value = "AB+", text = "AB+" } }, "value", "text"), new { @class = "form-control chosen-select", @id = "" })
+                            </div>
+                            <div class="col-md-4 top">
+                                <label>Contact No &nbsp;&nbsp;<i class="fa fa-star" style="color:red"></i></label>
+                                @Html.TextBoxFor(m => m.Employee.Phone, new { @class = "form-control thresold-i", @type = "number", @required = "true" })
+                            </div>
+                            <div class="col-md-4 top">
+                                <label>Emergency Contact No</label>
+                                @Html.TextBoxFor(m => m.Employee.EmerPhone, new { @class = "form-control thresold-i", @type = "number", id = "" })
+                            </div>
+                            <div class="col-md-4 top">
+                                <label>City &nbsp;&nbsp;<i class="fa fa-star" style="color:red"></i></label>
+                                @Html.TextBoxFor(m => m.Employee.City, new { @class = "form-control thresold-i", @type = "", id = "", @required = "true" })
+                            </div>
+                            <div class="col-md-8 top">
+                                <label>Address</label>
+                                @Html.TextAreaFor(m => m.Employee.Address, new { @class = "form-control thresold-i", @type = "", id = "" ,rows="2",cols="3" })
+                            </div>
+                        </div>
+                        <hr class="new2" />
+                        <div class="card-header">
+                            <h5 class="card-header-text" style="margin-left:-20px"><u>Employement Detail</u></h5>
+                        </div>
+                        <div class="row">
+                            
+                            <div class="col-md-4">
+                                <label>Department &nbsp;&nbsp;<i class="fa fa-star" style="color:red"></i></label>
+                                @Html.DropDownListFor(m => m.Employee.Departid, new SelectList(Model.DepartList, "id", "Name"), "Select Department", htmlAttributes: new { @class = "chosen-select form-control", @required = "true" })
+                            </div>
+                            <div class="col-md-4">
+                                <label>Type</label>
+                                @Html.DropDownListFor(m => m.Employee.Type, new SelectList(new List<Object> { new { value = "Permanent", text = "Permanent" }, new { value = "DailyWagers", text = "DailyWagers" } }, "value", "text"), new { @class = "form-control chosen-select" })
+                            </div>
+                            <div class="col-md-4">
+                                <label>Designation &nbsp;&nbsp;<i class="fa fa-star" style="color:red"></i></label>
+                                @Html.DropDownListFor(m => m.Employee.Designationid, new SelectList(Model.DesignationList, "id", "Name"), "Select Designation", htmlAttributes: new { @class = "chosen-select form-control", @required = "true" })
+                            </div>
+                            @*<div class="col-md-4">
+                                <label>Shift</label>
+                                @Html.DropDownListFor(m => m.Employee.Shiftid, new SelectList(Model.ShiftList, "id", "Name"), "Select Shift", htmlAttributes: new { @class = "chosen-select form-control" })
+                            </div>*@
+                            <div class="col-md-4 top">
+                                <label>Line Manager &nbsp;&nbsp;<i class="fa fa-star" style="color:red"></i></label>
+                                @Html.DropDownListFor(m => m.Employee.Managerid, new SelectList(Model.LineManagerList, "EmployeeAcc", "Name"), "Select Manager", htmlAttributes: new { @class = "chosen-select form-control" })
+                            </div>
+                            <div class="col-md-4 top">
+                                <label>Roaster &nbsp;&nbsp;<i class="fa fa-star" style="color:red"></i></label>
+                                @Html.DropDownListFor(m => m.Employee.Roasterid, new SelectList(Model.RoasterList, "id", "Name"), "Select Roaster", htmlAttributes: new { @class = "chosen-select form-control", @required = "true" })
+                            </div>
+                            <div class="col-md-4 top">
+                                <label>Qualification &nbsp;&nbsp;<i class="fa fa-star" style="color:red"></i></label>
+                                @Html.TextBoxFor(m => m.Employee.EmpQualification, new { @class = "form-control thresold-i", @required = "true" })
+                            </div>
+                            @*<div class="col-md-4 top">
+                                <label>Leave Approval</label>
+                                @Html.DropDownListFor(m => m.Employee.LeaveApproval, new SelectList(Model.LeaveApprovalList, "EmployeeAcc", "Name"), "Select Manager", htmlAttributes: new { @class = "chosen-select form-control" })
+                            </div>
+                            <div class="col-md-4 top">
+                                <label>OT Approval</label>
+                                @Html.DropDownListFor(m => m.Employee.OTApproval, new SelectList(Model.OTApprovalList, "EmployeeAcc", "Name"), "Select Manager", htmlAttributes: new { @class = "chosen-select form-control" })
+                            </div>*@
+                            <div class="col-md-3 top">
+                                <p style="margin-top:30px"><b>Over Time</b></p> @Html.CheckBox("Employee.overTime", new { @class = "form-control", @placeholder = "", style = "margin-top:-20px;margin-left:-20px" })
+
+                            </div>
+                        </div>
+                        <hr class="new2" />
+                        <div class="card-header">
+                            <h5 class="card-header-text" style="margin-left:-20px"><u>Job Status Detail</u></h5>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Joining Date &nbsp;&nbsp;<i class="fa fa-star" style="color:red"></i></label>
+                                @Html.TextBoxFor(m => m.Employee.JoiningDate, new { @class = "form-control thresold-i", @type = "date", id = "dateJoin", @required = "true" })
+                            </div>
+                            <div class="col-md-4">
+                                <label>ID Card Detail</label>
+                                @Html.TextBoxFor(m => m.Employee.idDetail, new { @class = "form-control", @type = "" })
+                            </div>
+                            <div class="col-md-4">
+                                <label>Leave Calender &nbsp;&nbsp;<i class="fa fa-star" style="color:red"></i></label>
+                                @Html.DropDownListFor(m => m.Employee.LeaveCal, new SelectList(new List<Object> { new { value = "5", text = "5" }, new { value = "6", text = "6" }, new { value = "7", text = "7" } }, "value", "text"), new { @class = "form-control chosen-select", @required = "true" })
+                            </div>
+                        </div>
+                        <hr class="new2" />
+                        <div class="card-header">
+                            <h5 class="card-header-text" style="margin-left:-20px"><u>Financial Detail</u></h5>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label>Select Package &nbsp;&nbsp;<i class="fa fa-star" style="color:red"></i></label>
+                                @Html.DropDownListFor(m => m.Employee.salaryid, new SelectList(Model.SalaryList, "id", "Name"), "Select Package", htmlAttributes: new { @class = "chosen-select form-control", onchange = "Action(this.value)", @required = "true" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3 top">
+                                <label>Basic Salary</label>
+                                @if (Model.Employee.id == 0)
+                                {
+                                    <input type="text" readonly name="" id="Basic" class="form-control" value="" />
+                                }
+                                else
+                                {
+                                    <input type="text" readonly name="" id="Basic" class="form-control" value="@Model.SalaryPackage.BasicSalary" />
+                                }
+                                @*@if (Model.Code == 1)
+            {
+                <input type="text" readonly name="" id="Basic" class="form-control" value="@Model.SalaryDup.BasicSalary" />
+            }*@
+
+
+                            </div>
+                            <div class="col-md-3 top">
+                                <label>Medical Allowance</label>
+                                @if (Model.Employee.id == 0)
+                                {
+                                    <input type="text" readonly name="" class="form-control" value="" id="Medical" />
+                                }
+                                else
+                                {
+                                    <input type="text" readonly name="" class="form-control" value="@Model.SalaryPackage.MedicalAllowance" id="Medical" />
+                                }
+                                @*@if (Model.Code == 1)
+            {
+                <input type="text" readonly name="" class="form-control" value="@Model.SalaryDup.MedicalAllowance" id="Medical" />
+            }*@
+
+                            </div>
+                            <div class="col-md-3 top">
+                                <label>House Rent</label>
+                                @if (Model.Employee.id == 0)
+                                {
+                                    <input type="text" readonly name="" class="form-control" value="" id="House" />
+                                }
+                                else
+                                {
+                                    <input type="text" readonly name="" class="form-control" value="@Model.SalaryPackage.HouseRent" id="House" />
+                                }
+                                @*@if (Model.Code == 1)
+            {
+                <input type="text" readonly name="" class="form-control" value="@Model.SalaryDup.HouseRent" id="House" />
+            }*@
+
+                            </div>
+                            <div class="col-md-3 top">
+                                <label>Gross Salary</label>
+                                @if (Model.Employee.id == 0)
+                                {
+                                    <input type="text" readonly name="" id="Total" class="form-control" value="" />
+                                }
+                                else
+                                {
+                                    <input type="text" readonly name="" id="Total" class="form-control" value="@Model.SalaryPackage.Total" />
+                                }
+                                @*@if (Model.Code == 1)
+            {
+            <input type="text" readonly name="" id="Total" class="form-control" value="@Model.SalaryDup.Total" />
+            }*@
+                            </div>
+                            <div class="col-md-4 top">
+                                <label>Per Hour Salary <span style="color:red;font-size:12px"><b>(Required If OT is Checked)</b></span></label>
+                                @Html.TextBoxFor(m => m.Employee.PerHourSalary, new { @class = "form-control", @type = "" })
+                            </div>
+                            <div class="col-md-3 top">
+                                <label>Payment Transfer Type &nbsp;&nbsp;<i class="fa fa-star" style="color:red"></i></label>
+                                @Html.DropDownListFor(m => m.Employee.PaymentTransfertype, new SelectList(new List<Object> { new { value = "Cash Payment", text = "Cash Payment" }, new { value = "Bank Payment", text = "Bank Payment" } }, "value", "text"), new { @class = "form-control chosen-select" })
+                            </div>
+                            <div class="col-md-3 top">
+                                <label>Select Bank</label>
+                                @Html.DropDownListFor(m => m.Employee.BankInfo, new SelectList(Model.BankList, "id", "Name"), "Select Bank", htmlAttributes: new { @class = "chosen-select form-control" })
+                            </div>
+                            <div class="col-md-2 top">
+                                <label>Bank Account#</label>
+                                @Html.TextBoxFor(m => m.Employee.BankAcc, new { @class = "form-control", @type = "" })
+                            </div>
+                        </div>
+                        <hr class="new2" />
+                        <div class="card-header">
+                            <h5 class="card-header-text" style="margin-left:-20px"><u>Leave Detail</u></h5>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Off Day &nbsp;&nbsp;<i class="fa fa-star" style="color:red"></i></label>
+                                @Html.DropDownListFor(m => m.Employee.offDay, new SelectList(new List<Object> { new { value = "", text = "Select" }, new { value = "Monday", text = "Monday" }, new { value = "Tuesday", text = "Tuesday" }, new { value = "Wednesday", text = "Wednesday" }, new { value = "Thursday", text = "Thursday" }, new { value = "Friday", text = "Friday" }, new { value = "Saturday", text = "Saturday" }, new { value = "Sunday", text = "Sunday" } }, "value", "text"), new { @class = "form-control chosen-select", @required = "true" })
+                            </div>
+                            <div class="col-md-4">
+                                <label>Number Of Leaves Allowed In Month</label>
+                                @Html.TextBoxFor(m => m.Employee.NumberOfleaves, new { @class = "form-control", @type = "" })
+                            </div>
+                            <div class="col-md-4">
+
+                                <p style="margin-top:32px"><b>Attendance Sandwitch</b></p> @Html.CheckBox("Employee.AttendanceSandwitch", new { @class = "form-control", @placeholder = "", style = "margin-top:-20px" })
+                            </div>
+                        </div>
+                        <div class="col-md-6 offset-sm-4">
+                            @if (Model.Employee.id == 0)
+                            {
+                                <button type="submit" class="btn btn-primary col-md-8" style="margin-top:30px" onclick="return confirm('Do you want to Save ..')"><i class="fa fa-plus"></i> Save</button>
+                            }
+                            else
+                            {
+                                <button type="submit" class="btn btn-primary col-md-8" style="margin-top:30px" onclick="return confirm('Do you want to Update..')"><i class="fa fa-plus"></i> Update</button>
+                            }
+                        </div>
+
+                        @Html.HiddenFor(m => m.Employee.id)
+                        
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Main content ends -->
+    <!-- Container-fluid ends -->
+</div>
+<script>
+
+    $('#cnic').keydown(function () {
+        if (event.keyCode == 8 || event.keyCode == 9
+            || event.keyCode == 27 || event.keyCode == 13
+            || (event.keyCode == 65 && event.ctrlKey === true))
+            return;
+        if ((event.keyCode < 48 || event.keyCode > 57))
+            event.preventDefault();
+
+        var length = $(this).val().length;
+
+        if (length == 5 || length == 13)
+            $(this).val($(this).val() + '-');
+    });
+
+
+    $(".chosen-select").chosen();
+    var loadFile = function (event) {
+        var output = document.getElementById('output');
+        output.src = URL.createObjectURL(event.target.files[0]);
+    };
+    $(document).ready(function () {
+        var now = new Date();
+        var month = (now.getMonth() + 1);
+        var day = now.getDate();
+        if (month < 10)
+            month = "0" + month;
+        if (day < 10)
+            day = "0" + day;
+        var today = now.getFullYear() + '-' + month + '-' + day;
+        $('#date').val(today);
+        $('#dateJoin').val(today);
+    });
+    setTimeout(function () {
+        $('#mydiv').fadeOut('fast');
+    }, 3000); // <-- time in milliseconds
+     function Action(id) {
+        $.ajax({
+            url: '@Url.Action("Action", "Employee")',
+            type: "POST",
+            data: { "id": id },
+        "success": function (data) {
+        if (data != null) {
+            var vdata = data;
+            $("#Basic").val(vdata[0].BasicSalary);
+            $("#Medical").val(vdata[0].MedicalAllowance);
+            $("#House").val(vdata[0].HouseRent);
+            $("#Total").val(vdata[0].Total);
+        }
+    }
+});
+    };
+    //Get Code
+    @*function GetCode(id) {
+        $.ajax({
+            url: '@Url.Action("GetCode", "Employee")',
+            type: "POST",
+            data: { "id": id },
+        "success": function (data) {
+        if (data != null) {
+            var vdata = data;
+            $("#Bcode").val(vdata[0].BCode);
+
+        }
+    }
+});
+    };
+     function GetNum(id) {
+        $.ajax({
+            url: '@Url.Action("GetNum", "Employee")',
+            type: "POST",
+            data: { "id": id },
+        "success": function (data) {
+        if (data != null) {
+            var vdata = data;
+            $("#Gene").val(vdata);
+            }
+            var Code = document.getElementById("Bcode").value;
+            var Gene = document.getElementById("Gene").value;
+            var Dash = "-";
+            var Final = Code + Dash + Gene;
+            document.getElementById("EmpCodes").value = Final;
+    }
+        });
+         
+    };*@
+    
+</script>

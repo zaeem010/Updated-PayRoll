@@ -1,0 +1,110 @@
+﻿@model PayRoll.ViewModel.DailyReportVM
+@{
+    Layout = null;
+    int sr = 0;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <title>Report</title>
+</head>
+<body onload="window.print();">
+    <div class="container">
+        <h2 class="text-center"><b><u>Daily Attendance Sheet</u></b></h2>
+        @*start*@
+       
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center"><b><u>@Convert.ToDateTime(Model.DateName).ToString("dd-MMM-yyyy")</u></b></h3>
+                </div>
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th class="center">Employee Name</th>
+                                        <th class="center">Day Name</th>
+                                        <th class="center">Roaster</th>
+                                        <th class="center">CheckIn Time</th>
+                                        <th class="center">CheckOut Time</th>
+                                        <th class="center">OverTime</th>
+                                        <th class="center">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach (var lst in Model.EmployeeDailyReportVMQList)
+                                    {
+                                        <tr>
+                                            <td>@{sr++;}@sr</td>
+                                            <td>@lst.Name</td>
+                                            <td>@lst.DateName</td>
+                                            <td>@lst.ShiftName @lst.ShiftStartTime.ToString("hh:mm tt")-@lst.ShiftEndTime.ToString("hh:mm tt") </td>
+                                            @*statusinout*@
+                                            @if (lst.DateTimeIn.Year.ToString() == "1")
+                                            {
+                                                <td><span style="color:red">Time In Missing</span></td>
+                                            }
+                                            else
+                                            {
+                                                <td><span style="color:green">@Convert.ToDateTime(lst.DateTimeIn).ToString("hh:mm:ss tt")</span></td>
+                                            }
+
+                                            @if (lst.DateTimeout.Year.ToString() == "1")
+                                            {
+                                                <td><span style="color:red">Time Out Missing</span></td>
+                                            }
+                                            else
+                                            {
+                                                <td><span style="color:green">@Convert.ToDateTime(lst.DateTimeout).ToString("hh:mm:ss tt")</span></td>
+                                            }
+                                            @*Ot*@
+                                            @if (lst.OverTime > 0 && lst.OverTime != 540)
+                                            {
+                                                <td>@(lst.OverTime/60)H:@(lst.OverTime%60)M </td>
+                                            }
+                                            else
+                                            {
+                                                <td>0</td>
+                                            }
+                                            @*status*@
+                                            @if (lst.Final == "Present")
+                                            {
+                                                <td><span style="color:lightseagreen">@lst.Final</span></td>
+                                            }
+                                            else if (lst.Final == "RestDay")
+                                            {
+                                                <td><span style="color:blue">@lst.Final</span></td>
+                                            }
+                                            else if (lst.Final == "Late")
+                                            {
+                                                <td><span style="color:yellowgreen">@lst.Final</span></td>
+                                            }
+                                            else
+                                            {
+                                                <td><span style="color:red">@lst.Final</span></td>
+                                            }
+
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+      
+        @*end*@
+    </div>
+</body>
+</html>

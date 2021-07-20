@@ -1,0 +1,205 @@
+﻿@model PayRoll.ViewModel.RsAssignVM
+@{
+    ViewBag.Title = "Create";
+    string valavailable = "";
+}
+<style>
+    select:invalid {
+        height: 6px !important;
+        opacity: 0 !important;
+        position: absolute !important;
+        display: flex !important;
+        width: 290px;
+    }
+</style>
+<div class="content-wrapper">
+
+    <!-- Container-fluid starts -->
+    <!-- Main content starts -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="main-header">
+            </div>
+        </div>
+        <div id="mydiv" class="col-md-4">
+            <p class="text-center bg-success">@TempData["Insert"]</p>
+            <p class="text-center bg-danger">@TempData["Dup"]</p>
+        </div>
+        <div class="col-lg-12">
+            <a href="@Url.Action("Index","RosAssign")" class="btn btn-skype offset-lg-10"><i class="fa fa-list"></i> Assigned Roaster</a>
+            <div class="card" style="margin-top:20px">
+                <div class="card-header">
+                    <h5 class="card-header-text"><u>Roaster Assign</u></h5>
+                </div>
+                <div class="card-block">
+                    @using (Html.BeginForm("Save", "RosAssign", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        @Html.AntiForgeryToken()
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>Shift &nbsp;&nbsp;<i class="fa fa-star" style="color:red"></i></label>
+                            @if (Model.RsAssign.id == 0)
+                            {
+                                @Html.DropDownListFor(m => m.RsAssign.Shiftid, new SelectList(Model.ShiftList, "id", "Name"), "Select Shift", htmlAttributes: new { @class = "chosen-select form-control", @required = "true" })
+                            }
+                            else
+                            {
+                                @Html.DropDownListFor(m => m.RsAssign.Shiftid, new SelectList(Model.ShiftList, "id", "Name"), "Select Shift", htmlAttributes: new { @class = "chosen-select form-control", @required = "true",@disabled="true" })
+                            }
+                        </div>
+                        <div class="col-md-4">
+                            <label>Date Time</label>
+                            @Html.TextBoxFor(m=>m.RsAssign.DateTime,new {@class="form-control", @type="datetime-local", @required = "true" })
+                        </div>
+                        </div><hr class="new2" /><div class="card-header">
+                            <h5 class="card-header-text" style="margin-left:-20px"><u>Employees</u></h5>
+                        </div><div class="row" style="overflow-x:auto">
+                            <table id="table1" class="table table-striped table-bordered nowrap">
+                                <thead>
+                                    <tr>
+                                        <th>Employee Code</th>
+                                        <th>Leave Day</th>
+                                        <th>Employee Name</th>
+                                        <th>Shift Name</th>
+                                        <th>Old Leave Day</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th>Emp Code</th>
+                                        <th>Employee Name</th>
+                                        <th>Leave Day</th>
+                                        <th>Leave Day</th>
+                                        <th>Leave Day</th>
+                                    </tr>
+                                </tfoot>
+                                <tbody>
+                                    @if (Model.RsAssign.id == 0)
+                                    {
+                                        foreach (var lst in Model.RsAssignCreateVMQ)
+                                        {
+                                    <tr>
+                                                <td width="50px"><input type="hidden" name="Emp" value="@lst.EmpCode" />@lst.EmpCode</td>
+                                                <td width="200px">
+                                                    <select class="form-control chosen-select" name="Day">
+                                                        <option value="">Select</option>
+                                                        <option value="Monday">Monday</option>
+                                                        <option value="Tuesday">Tuesday</option>
+                                                        <option value="Wednesday">Wednesday</option>
+                                                        <option value="Thursday">Thursday</option>
+                                                        <option value="Friday">Friday</option>
+                                                        <option value="Saturday">Saturday</option>
+                                                        <option value="Sunday">Sunday</option>
+                                                    </select>
+                                                </td>
+                                                <td width="50px">@lst.Name</td>
+                                                <td>@lst.ShiftName</td>
+                                                <td>@lst.LeaveDay</td>
+                                    </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        foreach (var lst in Model.EmployeeList)
+                                        {
+                                            valavailable = "NO";
+                                <tr>
+                                    @foreach (var lstchild in Model.RsAssignChildList)
+                                    {
+                                        if (lst.EmpCode.ToString() == lstchild.EmpCode.ToString())
+                                        {
+                                            <td width="50px"><input type="checkbox" name="" value="" checked /> <input type="hidden" name="Emp" value="@lst.EmpCode" />@lst.EmpCode</td>
+                                            <td width="200px">
+                                                <select class="form-control chosen-select" name="Day">
+                                                    <option value="">Select</option>
+                                                    <option value="Monday" @if (lstchild.LeaveDay == "Monday") { <text> selected</text>}>Monday</option>
+                                                    <option value="Tuesday" @if (lstchild.LeaveDay == "Tuesday") { <text> selected</text>}>Tuesday</option>
+                                                    <option value="Wednesday" @if (lstchild.LeaveDay == "Wednesday") { <text> selected</text>}>Wednesday</option>
+                                                    <option value="Thursday" @if (lstchild.LeaveDay == "Thursday") { <text> selected</text>}>Thursday</option>
+                                                    <option value="Friday" @if (lstchild.LeaveDay == "Friday") { <text> selected</text>}>Friday</option>
+                                                    <option value="Saturday" @if (lstchild.LeaveDay == "Saturday") { <text> selected</text>}>Saturday</option>
+                                                    <option value="Sunday" @if (lstchild.LeaveDay == "Sunday") { <text> selected</text>}>Sunday</option>
+                                                </select>
+                                            </td>
+                                            valavailable = "YES";
+                                        }
+
+                                    }
+                                    @if (valavailable == "NO")
+                                    {
+                                        <td width="50px"><input type="checkbox" name="" value="" /> <input type="hidden" name="Emp" value="@lst.EmpCode" />@lst.EmpCode</td>
+                                        <td width="200px">
+                                            <select class="form-control chosen-select" name="Day">
+                                                <option value="">Select</option>
+                                                <option value="Monday">Monday</option>
+                                                <option value="Tuesday">Tuesday</option>
+                                                <option value="Wednesday">Wednesday</option>
+                                                <option value="Thursday">Thursday</option>
+                                                <option value="Friday">Firday</option>
+                                                <option value="Saturday">Saturday</option>
+                                                <option value="Sunday">Sunday</option>
+                                            </select>
+                                        </td>
+                                    }
+
+                                    <td width="50px">@lst.Name</td>
+
+                                </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="col-md-6 offset-sm-4">
+                            @if (Model.RsAssign.id == 0)
+                            {
+                                <button type="submit" class="btn btn-primary col-md-8" style="margin-top:30px" onclick="return confirm('Do you want to Save ..')"><i class="fa fa-plus"></i> Save</button>
+                            }
+                            else
+                            {
+                                <button type="submit" class="btn btn-primary col-md-8" style="margin-top:30px" onclick="return confirm('Do you want to Update..')"><i class="fa fa-plus"></i> Update</button>
+                            }
+                        </div>
+
+                        @Html.HiddenFor(m => m.RsAssign.id)
+                        @Html.HiddenFor(m => m.RsAssign.RsAssignid)
+                        @Html.HiddenFor(m => m.RsAssign.Shiftid)
+
+                    @*  *@}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Main content ends -->
+    <!-- Container-fluid ends -->
+</div>
+<script>
+    $(".chosen-select").chosen();
+    //start
+    $(document).ready(function () {
+        var table1 = $('#table1').DataTable({
+            "paging": false,
+            "ordering": false,
+            "info": true,
+        });
+        // Setup - add a text input to each footer cell
+        $('#table1 tfoot th').each(function () {
+            var title = $(this).text();
+            $(this).html('<div class="md-input-wrapper"><input type="text" class="md-form-control" placeholder="Search" /></div>');
+        });
+        //
+        table1.columns().every(function () {
+            var that = this;
+
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+                }
+            });
+        });
+        //
+    });
+</script>

@@ -1,0 +1,300 @@
+﻿@model PayRoll.ViewModel.EmployeeAttendanceApprovalVM
+@{
+    ViewBag.Title = "Index";
+}
+<div class="content-wrapper">
+
+    <!-- Container-fluid starts -->
+    <!-- Main content starts -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="main-header">
+            </div>
+        </div>
+        <div id="mydiv" class="col-md-3">
+            <p class="text-center bg-success">@TempData["Update"]</p>
+            <p class="text-center bg-danger">@TempData["Delete"]</p>
+        </div>
+        <div class="col-lg-12">
+
+
+            @*<a href="@Url.Action("Create","OTRequest")" class="btn btn-skype offset-lg-10"><i class="fa fa-plus"></i>  Create New</a>*@
+            <div class="card" style="margin-top:20px">
+                <div class="row">
+                    <div class="col-sm-12">
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-header-text"><u>Attendance Approval</u></h5>
+                            </div>
+                            <div class="card-block">
+                                <ul class="nav nav-tabs  tabs" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" data-toggle="tab" href="#home1" role="tab" style="color:blue">Pending</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#profile1" role="tab" style="color:green">Approved</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#messages1" role="tab" style="color:red">Rejected</a>
+                                    </li>
+                                </ul>
+                                <br />
+                                <div class="tab-content tabs">
+                                    <div class="tab-pane active" id="home1" role="tabpanel">
+
+
+                                        <input type="checkbox" id="chkAll" class="" style="margin-top:5px" /><i class="fa fa-users" style="color:blueviolet;font-size:20px"></i>Select All
+                                        @using (Html.BeginForm("Status", "EmployeeAttendance", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                                        {
+                                            @Html.AntiForgeryToken()
+                                            <table id="table1" class="table dt-responsive table-striped table-bordered nowrap">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Employee Name</th>
+                                                        <th>Manager Name</th>
+                                                        <th>Check In</th>
+                                                        <th>Check Out</th>
+                                                        <th>Narration</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tfoot>
+                                                    <tr>
+                                                        <th>Employee Name</th>
+                                                        <th>Manager Name</th>
+                                                        <th>Start Date</th>
+                                                        <th>End Date</th>
+                                                        <th>End Date</th>
+                                                        <th>End Date</th>
+                                                    </tr>
+                                                </tfoot>
+                                                <tbody>
+                                                    @foreach (var lst in Model.Pending)
+                                                    {
+                                                    <tr>
+                                                        <td><input type="checkbox" class="form-control" name="Emp" value="@lst.id" /> @lst.EmployeeName</td>
+                                                        <td>@lst.ManagerName</td>
+                                                        @if (lst.CheckInDatetime.ToString() != "0001-01-01 12:00:00 AM")
+                                                        {
+                                                            <td>@lst.CheckInDatetime</td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td></td>
+                                                        }
+                                                        @if (lst.CheckOutDatetime.ToString() != "0001-01-01 12:00:00 AM")
+                                                        {
+                                                            <td>@lst.CheckOutDatetime</td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td></td>
+                                                        }
+                                                        <td>@lst.Remarks</td>
+                                                        <td style="width:30px; text-align:left;">
+                                                            <a href="@Url.Action("Delete", new { id = lst.id })" class="badge badge-danger" onclick="return confirm('Do you want to Delete ..')" data-toggle="tooltip" data-placement="left" title="Click Me To Delete"><i class="fa fa-trash-o"></i></a>
+                                                        </td>
+                                                    </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                            <div class="col-md-4">
+                                                <label><i style="color:green" class="fa fa-check"></i> Approve</label>
+                                                <input type="radio" name="Status" value="Approved" />
+                                                <label><i style="color:red" class="fa fa-times"></i>Reject</label>
+                                                <input type="radio" name="Status" value="Rejected" />
+                                                @*<input type="text" class="form-control" name="Narr" value="" placeholder="Type Narration...." />*@
+                                            </div>
+                                            <div class="col-md-6 offset-sm-4">
+                                                <button type="submit" class="btn btn-primary col-md-8" style="margin-top:30px" onclick="return confirm('Do you want to Save ..')"><i class="fa fa-plus"></i> Save</button>
+                                            </div>
+                                        }
+                                    </div>
+                                    <div class="tab-pane" id="profile1" role="tabpanel">
+                                        <table id="advanced-table" class="table table-striped table-bordered nowrap">
+                                            <thead>
+                                                <tr>
+                                                    <th>Employee Name</th>
+                                                    <th>Manager Name</th>
+                                                    <th>Check In</th>
+                                                    <th>Check Out</th>
+                                                    <th>Narration</th>
+                                                </tr>
+                                            </thead>
+                                            <tfoot>
+                                                <tr>
+                                                    <th>Employee Name</th>
+                                                    <th>Manager Name</th>
+                                                    <th>Check In</th>
+                                                    <th>Check Out</th>
+                                                    <th>Narration</th>
+                                                </tr>
+                                            </tfoot>
+                                            <tbody>
+                                                @foreach (var lst in Model.Approved)
+                                                {
+                                                <tr>
+                                                    <td>@lst.EmployeeName</td>
+                                                    <td>@lst.ManagerName</td>
+                                                    @if (lst.CheckInDatetime.ToString() != "0001-01-01 12:00:00 AM")
+                                                    {
+                                                        <td>@lst.CheckInDatetime</td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td></td>
+                                                    }
+                                                    @if (lst.CheckOutDatetime.ToString() != "0001-01-01 12:00:00 AM")
+                                                    {
+                                                        <td>@lst.CheckOutDatetime</td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td></td>
+                                                    }
+                                                    <td>@lst.Remarks</td>
+                                                </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="tab-pane" id="messages1" role="tabpanel">
+                                        <table id="table2" class="table table-striped table-bordered nowrap">
+                                            <thead>
+                                                <tr>
+                                                    <th>Employee Name</th>
+                                                    <th>Manager Name</th>
+                                                    <th>Check In</th>
+                                                    <th>Check Out</th>
+                                                    <th>Narration</th>
+                                                </tr>
+                                            </thead>
+                                            <tfoot>
+                                                <tr>
+                                                    <th>Employee Name</th>
+                                                    <th>Manager Name</th>
+                                                    <th>Check In</th>
+                                                    <th>Check Out</th>
+                                                    <th>Narration</th>
+                                                </tr>
+                                            </tfoot>
+                                            <tbody>
+                                                @foreach (var lst in Model.Rejected)
+                                                {
+                                                <tr>
+                                                    <td>@lst.EmployeeName</td>
+                                                    <td>@lst.ManagerName</td>
+                                                    @if (lst.CheckInDatetime.ToString() != "0001-01-01 12:00:00 AM")
+                                                    {
+                                                        <td>@lst.CheckInDatetime</td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td></td>
+                                                    }
+                                                    @if (lst.CheckOutDatetime.ToString() != "0001-01-01 12:00:00 AM")
+                                                    {
+                                                        <td>@lst.CheckOutDatetime</td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td></td>
+                                                    }
+                                                    <td>@lst.Remarks</td>
+                                                </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- Main content ends -->
+    <!-- Container-fluid ends -->
+</div>
+<script>
+    $("#chkAll").on("click", function () {
+        $("input[name=Emp]").prop("checked", $(this).prop("checked"));
+    });
+    setTimeout(function () {
+        $('#mydiv').fadeOut('fast');
+    }, 3000); // <-- time in milliseconds
+    //start
+    $(document).ready(function () {
+        var table1 = $('#table1').DataTable({
+            "paging": false,
+            "ordering": false,
+            "info": true,
+        });
+        // Setup - add a text input to each footer cell
+        $('#table1 tfoot th').each(function () {
+            var title = $(this).text();
+            $(this).html('<div class="md-input-wrapper"><input type="text" class="md-form-control" placeholder="Search" /></div>');
+        });
+        //
+        table1.columns().every(function () {
+            var that = this;
+
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+                }
+            });
+        });
+        //
+    });
+    $(document).ready(function () {
+        var table2 = $('#table2').DataTable({
+            "paging": false,
+            "ordering": false,
+            "info": true,
+        });
+        // Setup - add a text input to each footer cell
+        $('#table2 tfoot th').each(function () {
+            var title = $(this).text();
+            $(this).html('<div class="md-input-wrapper"><input type="text" class="md-form-control" placeholder="Search" /></div>');
+        });
+        //
+        table2.columns().every(function () {
+            var that = this;
+
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+                }
+            });
+        });
+        //
+    });
+
+
+    //end
+    $(function () {
+        $("input[type='checkbox']").click(function () {
+            if ($(this).prop('checked') == true && $(this).attr('class') == 'none') {
+
+                $(this).closest("tr").find("input[type='checkbox']").each(function () {
+                    $(this).prop('checked', false);
+                });
+                $(this).prop('checked', true);
+
+            }
+            else {
+                $(this).closest("tr").find("input[type='checkbox']").each(function () {
+                    $(this).closest('.none').prop('checked', false);
+                });
+            }
+        });
+    });
+</script>

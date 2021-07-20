@@ -1,0 +1,89 @@
+﻿@model PayRoll.ViewModel.EmployeeAttendanceVM
+@{
+    ViewBag.Title = "Create";
+}
+<div class="content-wrapper">
+
+    <!-- Container-fluid starts -->
+    <!-- Main content starts -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="main-header">
+            </div>
+        </div>
+        <div id="mydiv" class="col-md-3">
+            <p class="text-center bg-success">@TempData["Insert"]</p>
+            <p class="text-center bg-danger">@TempData["Duplicate"]</p>
+        </div>
+        <div class="col-lg-12">
+            <a href="@Url.Action("Index","EmployeeAttendance")" class="btn btn-skype offset-lg-9"><i class="fa fa-list"></i> Employee Attendance</a>
+            <div class="card" style="margin-top:20px">
+                <div class="card-header">
+                    <h5 class="card-header-text"><u>Employee Attendance Form</u></h5>
+                </div>
+                <div class="card-block">
+                    <input type="checkbox" id="chkAll" class="" style="margin-top:5px" /><i class="fa fa-users" style="color:blueviolet;font-size:20px"></i>Select All
+                    @using (Html.BeginForm("Saves", "EmployeeAttendance", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="row">
+                            <div class="col-md-12">
+                                <br />
+                                <table id="simpletable" class="table dt-responsive table-striped table-bordered nowrap" style="margin-top:20px">
+                                    <thead>
+                                        <tr>
+                                            <th>Employees</th>
+                                            <th>Date From</th>
+                                            <th>Date To</th>
+                                            <th>Remarks</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Employees</th>
+                                            <th>Date From</th>
+                                            <th>Date To</th>
+                                            <th></th>
+                                        </tr>
+                                    </tfoot>
+                                    <tbody>
+                                        @foreach (var lst in Model.EmployeeList)
+                                        {
+                                            <tr>
+                                                <td><input style="margin-top:-10px" type="checkbox" name="" value="" /><input type="hidden" name="Emp" value="@lst.EmpCode" /><span style="margin-left:10px">@lst.Name</span></td>
+                                                <td><input type="datetime-local" class="form-control" name="StDate" value="" /></td>
+                                                <td><input type="datetime-local" class="form-control" name="EnDate" value="" /></td>
+                                                <td><input type="text" class="form-control" name="Remarks" value="" /></td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                                <div class="col-md-4">
+                                    <label><i style="color:green" class="fa fa-check"></i>Check In</label>
+                                    <input type="radio" name="Status" value="In" />
+                                    <label><i style="color:red" class="fa fa-times"></i>Check Out</label>
+                                    <input type="radio" name="Status" value="Out" />
+                                </div>
+                            </div>
+                            <div class="col-md-6 offset-sm-4">
+                                <button type="submit" class="btn btn-primary col-md-8" style="margin-top:30px" onclick="return confirm('Do you want to Save ..')"><i class="fa fa-plus"></i> Save</button>
+                            </div>
+                            @Html.HiddenFor(m => m.EmployeeAttendance.id)
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Main content ends -->
+    <!-- Container-fluid ends -->
+</div>
+<script>
+    $(".chosen-select").chosen();
+    setTimeout(function () {
+        $('#mydiv').fadeOut('fast');
+    }, 3000); // <-- time in milliseconds
+    $("#chkAll").on("click", function () {
+        $("input[name=Emp]").prop("checked", $(this).prop("checked"));
+    });
+</script>

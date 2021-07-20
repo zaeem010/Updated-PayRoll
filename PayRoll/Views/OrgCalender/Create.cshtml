@@ -1,0 +1,109 @@
+﻿@model PayRoll.Models.OrgCalender
+@{
+    ViewBag.Title = "Create";
+}
+<div class="content-wrapper">
+
+    <!-- Container-fluid starts -->
+    <!-- Main content starts -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="main-header">
+            </div>
+        </div>
+        <div id="mydiv" class="col-md-3">
+            <p class="text-center bg-success">@TempData["Insert"]</p>
+            <p class="text-center bg-danger">@TempData["Duplicate"]</p>
+        </div>
+        <div class="col-lg-12">
+            <a href="@Url.Action("Index","OrgCalender")" class="btn btn-skype offset-lg-10"><i class="fa fa-list"></i> OrgCalender List</a>
+            <div class="card" style="margin-top:20px">
+                <div class="card-header">
+                    <h5 class="card-header-text"><u>OrgCalender Form</u></h5>
+                </div>
+                <div class="card-block">
+                    @using (Html.BeginForm("Save", "OrgCalender", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label><b>Event Name</b>&nbsp;&nbsp;<i class="fa fa-star" style="color:red"></i></label>
+                            @Html.TextBoxFor(m => m.Name, new { @class = "form-control thresold-i", @required = "true", @placeholder = "" })
+                        </div>
+                        <div class="col-md-4">
+                            <label><b>Start Date</b> &nbsp;&nbsp;<i class="fa fa-star" style="color:red"></i></label>
+                            @if (Model.id == 0)
+                            {
+                                @Html.TextBoxFor(m => m.StDate, new { @class = "form-control thresold-i", @type = "date", id = "date" })
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(m => m.StDate, new { @class = "form-control thresold-i", @type = "date" })
+                            }
+                        </div>
+                        <div class="col-md-4">
+                            <label><b>End Date</b>&nbsp;&nbsp;<i class="fa fa-star" style="color:red"></i></label>
+                            @if (Model.id == 0)
+                            {
+                                @Html.TextBoxFor(m => m.EnDate, new { @class = "form-control thresold-i", @type = "date", id = "date_end" })
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(m => m.EnDate, new { @class = "form-control thresold-i", @type = "date"})
+                            }
+                        </div>
+                        <div class="col-md-1 top">
+                            <label><b>OT</b></label>
+                            <br />
+                            @if (Model.OT == "Yes")
+                            {
+                                <input type="checkbox" checked name="OT" value="Yes" style="margin-left:6px;" />
+                            }
+                            else
+                            {
+                                <input type="checkbox" name="OT" value="Yes" style="margin-left:6px;" />
+                            }
+
+                        </div>
+                        <div class="col-md-4 top">
+                            <label><b>OT Multiply By</b></label>
+                            @Html.TextBoxFor(m => m.OTMBy, new { @class = "form-control thresold-i", @type = "number" })
+                        </div>
+                        <div class="col-md-6 offset-sm-4">
+                            @if (Model.id == 0)
+                            {
+                                <button type="submit" class="btn btn-primary col-md-8" style="margin-top:30px" onclick="return confirm('Do you want to Save ..')"><i class="fa fa-plus"></i> Save</button>
+                            }
+                            else
+                            {
+                                <button type="submit" class="btn btn-primary col-md-8" style="margin-top:30px" onclick="return confirm('Do you want to Update..')"><i class="fa fa-plus"></i> Update</button>
+                            }
+                        </div>
+                        @Html.HiddenFor(m => m.id)
+                    </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Main content ends -->
+    <!-- Container-fluid ends -->
+</div>
+<script>
+    setTimeout(function () {
+        $('#mydiv').fadeOut('fast');
+    }, 3000); // <-- time in milliseconds
+    $(document).ready(function () {
+        var now = new Date();
+        var month = (now.getMonth() + 1);
+        var day = now.getDate();
+        if (month < 10)
+            month = "0" + month;
+        if (day < 10)
+            day = "0" + day;
+        var today = now.getFullYear() + '-' + month + '-' + day;
+        $('#date').val(today);
+        $('#date_end').val(today);
+    });
+</script>
