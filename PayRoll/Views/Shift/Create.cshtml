@@ -1,0 +1,100 @@
+﻿@model PayRoll.Models.Shiftes
+@{
+    ViewBag.Title = "Create";
+}
+<div class="content-wrapper">
+
+    <!-- Container-fluid starts -->
+    <!-- Main content starts -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="main-header">
+            </div>
+        </div>
+        <div id="mydiv" class="col-md-3">
+            <p class="text-center bg-success">@TempData["Insert"]</p>
+            <p class="text-center bg-danger">@TempData["Duplicate"]</p>
+        </div>
+        <div class="col-lg-12">
+            <a href="@Url.Action("Index","Shift")" class="btn btn-skype offset-lg-10"><i class="fa fa-list"></i> Shift List</a>
+            <div class="card" style="margin-top:20px">
+                <div class="card-header">
+                    <h5 class="card-header-text"><u>Shifts Form</u></h5>
+                </div>
+                <div class="card-block">
+                    @using (Html.BeginForm("Save", "Shift", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label><b>Name</b> &nbsp;&nbsp;<i class="fa fa-star" style="color:red"></i></label>
+                            @Html.TextBoxFor(m => m.Name, new { @class = "form-control thresold-i", @required = "true", @placeholder = "" })
+                        </div>
+                        <div class="col-md-3">
+                            <label><b>Start Time</b></label>
+                            @if (Model.id == 0)
+                            {
+                                @Html.TextBoxFor(m => m.StTime, new { @class = "form-control thresold-i", @type = "time" })
+                            }
+                            else
+                            {
+                                <input type="time" name="StTime"  class="form-control"  value="@Convert.ToDateTime(Model.StTime).ToString("HH:mm")" />
+                            }
+                        </div>
+                        <div class="col-md-3">
+                            <label><b>End Time</b></label>
+                            @if (Model.id == 0)
+                            {
+                                @Html.TextBoxFor(m => m.EnTime, new { @class = "form-control thresold-i", @type = "time" })
+                            }
+                            else
+                            {
+                                <input type="time" name="EnTime"  class="form-control" value="@Convert.ToDateTime(Model.EnTime).ToString("HH:mm")" />
+                            }
+                        </div>
+                        <div class="col-md-3">
+                            <label><b>Total Hours</b> &nbsp;&nbsp;<i class="fa fa-star" style="color:red"></i></label>
+                            @Html.TextBoxFor(m => m.ShiftHours, new { @class = "form-control thresold-i" ,@required="true"})
+                        </div>
+                        <div class="col-md-3 top">
+                            <label><b>Early Start Time In Mins</b></label>
+                            @Html.TextBoxFor(m => m.EarlyStTimeinMin, new { @class = "form-control thresold-i" })
+                        </div>
+                        <div class="col-md-3 top">
+                            <label><b>Late Start Time In Mins</b></label>
+                            @Html.TextBoxFor(m => m.LateStTimeinMin, new { @class = "form-control thresold-i" })
+                        </div>
+                        <div class="col-md-3 top">
+                            <label><b>Early End Time In Mins</b></label>
+                            @Html.TextBoxFor(m => m.EarlyEnTimeinMin, new { @class = "form-control thresold-i" })
+                        </div>
+                        <div class="col-md-3 top">
+                            <label><b>Late End Time In Mins</b></label>
+                            @Html.TextBoxFor(m => m.LateEnTimeinMin, new { @class = "form-control thresold-i" })
+                        </div>
+                        <div class="col-md-6 offset-sm-4">
+                            @if (Model.id == 0)
+                            {
+                                <button type="submit" class="btn btn-primary col-md-8" style="margin-top:30px" onclick="return confirm('Do you want to Save ..')"><i class="fa fa-plus"></i> Save</button>
+                            }
+                            else
+                            {
+                                <button type="submit" class="btn btn-primary col-md-8" style="margin-top:30px" onclick="return confirm('Do you want to Update..')"><i class="fa fa-plus"></i> Update</button>
+                            }
+                        </div>
+                        @Html.HiddenFor(m => m.id)
+                    </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Main content ends -->
+    <!-- Container-fluid ends -->
+</div>
+<script>
+    setTimeout(function () {
+        $('#mydiv').fadeOut('fast');
+    }, 3000); // <-- time in milliseconds
+</script>

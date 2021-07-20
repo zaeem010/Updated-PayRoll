@@ -1,0 +1,109 @@
+﻿@model PayRoll.ViewModel.LeaveRequestVM
+@{
+    ViewBag.Title = "Create";
+}
+<div class="content-wrapper">
+
+    <!-- Container-fluid starts -->
+    <!-- Main content starts -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="main-header">
+            </div>
+        </div>
+        <div id="mydiv" class="col-md-3">
+            <p class="text-center bg-success">@TempData["Insert"]</p>
+            <p class="text-center bg-danger">@TempData["Duplicate"]</p>
+        </div>
+        <div class="col-lg-12">
+            @*<a href="@Url.Action("Index","OTRequest")" class="btn btn-skype offset-lg-10"><i class="fa fa-list"></i> OT Requests</a>*@
+            <div class="card" style="margin-top:20px">
+                <div class="card-header">
+                    <h5 class="card-header-text"><u>Leave Request Form</u></h5>
+                </div>
+                <div class="card-block">
+                    @using (Html.BeginForm("Save", "LeaveRequest", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table id="table1" class="table dt-responsive table-striped table-bordered nowrap" style="margin-top:20px">
+                                    <thead>
+                                        <tr>
+                                            <th>Employees</th>
+                                            <th>Date From</th>
+                                            <th>Date To</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Employees</th>
+                                            <th>Date From</th>
+                                            <th>Date To</th>
+                                        </tr>
+                                    </tfoot>
+                                    <tbody>
+                                        @foreach (var lst in Model.EmployeeList)
+                                        {
+                                            <tr>
+                                                <td><input type="hidden" name="Emp" value="@lst.EmployeeAcc" /><span style="margin-left:10px">@lst.Name</span></td>
+                                                <td><input type="date" class="form-control" name="StDate" value="" /></td>
+                                                <td><input type="date" class="form-control" name="EnDate" value="" /></td>
+                                            </tr>
+                                        }
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-md-6 offset-sm-4">
+                                @if (Model.LeaveRequest.id == 0)
+                                {
+                                    <button type="submit" class="btn btn-primary col-md-8" style="margin-top:30px" onclick="return confirm('Do you want to Save ..')"><i class="fa fa-plus"></i> Save</button>
+                                }
+                                else
+                                {
+                                    <button type="submit" class="btn btn-primary col-md-8" style="margin-top:30px" onclick="return confirm('Do you want to Update..')"><i class="fa fa-plus"></i> Update</button>
+                                }
+                            </div>
+                            @Html.HiddenFor(m => m.LeaveRequest.id)
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Main content ends -->
+    <!-- Container-fluid ends -->
+</div>
+<script>
+    $(".chosen-select").chosen();
+    setTimeout(function () {
+        $('#mydiv').fadeOut('fast');
+    }, 3000); // <-- time in milliseconds
+    //start
+    $(document).ready(function () {
+        var table1 = $('#table1').DataTable({
+            "paging": false,
+            "ordering": false,
+            "info": true,
+        });
+        // Setup - add a text input to each footer cell
+        $('#table1 tfoot th').each(function () {
+            var title = $(this).text();
+            $(this).html('<div class="md-input-wrapper"><input type="text" class="md-form-control" placeholder="Search" /></div>');
+        });
+        //
+        table1.columns().every(function () {
+            var that = this;
+
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+                }
+            });
+        });
+        //
+    });
+</script>

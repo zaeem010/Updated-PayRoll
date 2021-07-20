@@ -1,0 +1,73 @@
+﻿
+@{
+    ViewBag.Title = "Daily";
+}
+<div class="content-wrapper">
+
+    <!-- Container-fluid starts -->
+    <!-- Main content starts -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="main-header">
+            </div>
+        </div>
+        <div id="mydiv" class="col-md-3">
+            <p class="text-center bg-success">@TempData["Update"]</p>
+            <p class="text-center bg-danger">@TempData["Delete"]</p>
+        </div>
+        <div class="col-lg-12">
+
+
+            @*<a href="@Url.Action("Create","OTRequest")" class="btn btn-skype offset-lg-10"><i class="fa fa-plus"></i>  Create New</a>*@
+            <div class="card" style="margin-top:20px">
+                <div class="row">
+                    <div class="col-sm-12">
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-header-text"><u>Daily Reports</u></h5>
+                            </div>
+                            <div class="card-block">
+                                @using (Html.BeginForm("DailyReport", "EmployeeReport", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                                {
+                                    @Html.AntiForgeryToken()
+
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label><b>Select Date</b></label>
+                                            <input type="date" name="Dt" class="form-control" id="dt" value="" />
+                                        </div>
+                                        <div class="col-md-6 offset-sm-4">
+                                            <button type="submit" formtarget="_blank" class="btn btn-primary col-md-8" style="margin-top:30px"><i class="fa fa-search"></i> Search</button>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- Main content ends -->
+    <!-- Container-fluid ends -->
+</div>
+<script>
+    $(".chosen-select").chosen();
+    setTimeout(function () {
+        $('#mydiv').fadeOut('fast');
+    }, 3000); // <-- time in milliseconds
+    $(document).ready(function () {
+        var now = new Date();
+        var month = (now.getMonth() + 1);
+        var day = now.getDate();
+        if (month < 10)
+            month = "0" + month;
+        if (day < 10)
+            day = "0" + day;
+        var today = now.getFullYear() + '-' + month + '-' + day;
+        $('#dt').val(today);
+        
+    });
+</script>
