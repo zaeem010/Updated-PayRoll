@@ -45,15 +45,15 @@ namespace PayRoll.Controllers
             };
             return View(EmployeeAttendanceVM);
         }
-        public ActionResult Save(int[] Emp, string[] StDate, string[] EnDate,string[]Remarks,string Status)
+        public ActionResult Save(string[] Emp, DateTime[] StDate, DateTime[] EnDate,string[]Remarks,string Status)
         {
             for (int i = 0; i < Emp.Count(); i++)
             {
-                if (StDate[i] != "")
+                if (StDate[i].ToString() != "0001-01-01 12:00:00 AM")
                 {
                     _context.Database.ExecuteSqlCommand("INSERT INTO EmployeeAttendances(EmpCode, Status, Datetime, Remarks ,Comid) VALUES ('"+ Emp[i] +"','In','"+ StDate[i] +"','"+ Remarks[i] +"','"+ Session["Comid"] +"') ");
                 }
-                else if(EnDate[i] != "")
+                if(EnDate[i].ToString() != "0001-01-01 12:00:00 AM")
                 {
                     _context.Database.ExecuteSqlCommand("INSERT INTO EmployeeAttendances(EmpCode, Status, Datetime, Remarks,Comid) VALUES ('" + Emp[i] + "','Out','" + EnDate[i] + "','" + Remarks[i] + "','"+ Session["Comid"] +"') ");
                 }
@@ -128,33 +128,33 @@ namespace PayRoll.Controllers
             return RedirectToAction("Index");
         }
 
-        //public ActionResult Saves(string[] Emp, DateTime[] StDate, DateTime[] EnDate, string[] Remarks, string Status)
-        //{
-        //    for (int i = 0; i < Emp.Count(); i++)
-        //    {
+        public ActionResult AttendanceRequest(string[] Emp, DateTime[] StDate, DateTime[] EnDate, string[] Remarks, string Status)
+        {
+            for (int i = 0; i < Emp.Count(); i++)
+            {
 
-        //        if (EnDate[i].Year.ToString() != "1" && StDate[i].Year.ToString() != "1")
-        //        {
-        //            var Manager = _context.Database.SqlQuery<int>("SELECT Managerid FROM Employees WHERE(EmpCode = '" + Emp[i] + "')").SingleOrDefault();
-        //            _context.Database.ExecuteSqlCommand("INSERT INTO EmployeeAttendanceApprovals (EmpCode, Managerid, Status, CheckInDatetime, CheckOutDatetime, Remarks,Comid) VALUES ('" + Emp[i] + "','" + Manager + "','Pending','" + StDate[i] + "','" + EnDate[i] + "','" + Remarks[i] + "','" + Session["Comid"] + "') ");
-        //        }
-        //        else if (EnDate[i].Year.ToString() != "1" && StDate[i].Year.ToString() == "1")
-        //        {
-        //            var Manager = _context.Database.SqlQuery<int>("SELECT Managerid FROM Employees WHERE(EmpCode = '" + Emp[i] + "')").SingleOrDefault();
-        //            _context.Database.ExecuteSqlCommand("INSERT INTO EmployeeAttendanceApprovals (EmpCode, Managerid, Status, CheckInDatetime, CheckOutDatetime, Remarks,Comid)" +
-        //                " VALUES ('" + Emp[i] + "','" + Manager + "','Pending','0001-01-01 12:00:00 AM','" + EnDate[i] + "','" + Remarks[i] + "','" + Session["Comid"] + "') ");
-        //        }
-        //        else if (EnDate[i].Year.ToString() == "1" && StDate[i].Year.ToString() != "1")
-        //        {
-        //            var Manager = _context.Database.SqlQuery<int>("SELECT Managerid FROM Employees WHERE(EmpCode = '" + Emp[i] + "')").SingleOrDefault();
-        //            _context.Database.ExecuteSqlCommand("INSERT INTO EmployeeAttendanceApprovals (EmpCode, Managerid, Status, CheckInDatetime, CheckOutDatetime, Remarks,Comid)" +
-        //                " VALUES ('" + Emp[i] + "','" + Manager + "','Pending','" + StDate[i] + "','0001-01-01 12:00:00 AM','" + Remarks[i] + "','" + Session["Comid"] + "') ");
-        //        }
+                if (EnDate[i].Year.ToString() != "1" && StDate[i].Year.ToString() != "1")
+                {
+                    var Manager = _context.Database.SqlQuery<int>("SELECT Managerid FROM Employees WHERE(EmpCode = '" + Emp[i] + "')").SingleOrDefault();
+                    _context.Database.ExecuteSqlCommand("INSERT INTO EmployeeAttendanceApprovals (EmpCode, Managerid, Status, CheckInDatetime, CheckOutDatetime, Remarks,Comid) VALUES ('" + Emp[i] + "','" + Manager + "','Pending','" + StDate[i] + "','" + EnDate[i] + "','" + Remarks[i] + "','" + Session["Comid"] + "') ");
+                }
+                if (EnDate[i].Year.ToString() != "1" && StDate[i].Year.ToString() == "1")
+                {
+                    var Manager = _context.Database.SqlQuery<int>("SELECT Managerid FROM Employees WHERE(EmpCode = '" + Emp[i] + "')").SingleOrDefault();
+                    _context.Database.ExecuteSqlCommand("INSERT INTO EmployeeAttendanceApprovals (EmpCode, Managerid, Status, CheckInDatetime, CheckOutDatetime, Remarks,Comid)" +
+                        " VALUES ('" + Emp[i] + "','" + Manager + "','Pending','0001-01-01 12:00:00 AM','" + EnDate[i] + "','" + Remarks[i] + "','" + Session["Comid"] + "') ");
+                }
+                if (EnDate[i].Year.ToString() == "1" && StDate[i].Year.ToString() != "1")
+                {
+                    var Manager = _context.Database.SqlQuery<int>("SELECT Managerid FROM Employees WHERE(EmpCode = '" + Emp[i] + "')").SingleOrDefault();
+                    _context.Database.ExecuteSqlCommand("INSERT INTO EmployeeAttendanceApprovals (EmpCode, Managerid, Status, CheckInDatetime, CheckOutDatetime, Remarks,Comid)" +
+                        " VALUES ('" + Emp[i] + "','" + Manager + "','Pending','" + StDate[i] + "','0001-01-01 12:00:00 AM','" + Remarks[i] + "','" + Session["Comid"] + "') ");
+                }
 
-        //    }
-        //    TempData["Insert"] = "Inserted Successfully";
+            }
+            TempData["Insert"] = "Inserted Successfully";
 
-        //    return RedirectToAction("Creates");
-        //}
+            return RedirectToAction("Create");
+        }
     }
 }
