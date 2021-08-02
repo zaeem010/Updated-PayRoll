@@ -23,7 +23,7 @@
                 </div>
                 <div class="card-block">
                     <input type="checkbox" id="chkAll" class="" style="margin-top:5px" /><i class="fa fa-users" style="color:blueviolet;font-size:20px"></i>Select All
-                    @using (Html.BeginForm("Save", "EmployeeAttendance", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    @using (Html.BeginForm("AttendanceRequest", "EmployeeAttendance", FormMethod.Post, new { enctype = "multipart/form-data" }))
                     {
                         @Html.AntiForgeryToken()
                         <div class="row">
@@ -33,16 +33,16 @@
                                     <thead>
                                         <tr>
                                             <th>Employees</th>
-                                            <th>Date From</th>
-                                            <th>Date To</th>
+                                            <th>Check In DateTime</th>
+                                            <th>Check Out DateTime</th>
                                             <th>Remarks</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
                                         <tr>
                                             <th>Employees</th>
-                                            <th>Date From</th>
-                                            <th>Date To</th>
+                                            <th>Check In DateTime</th>
+                                            <th>Check Out DateTime</th>
                                             <th></th>
                                         </tr>
                                     </tfoot>
@@ -58,12 +58,12 @@
                                         }
                                     </tbody>
                                 </table>
-                                <div class="col-md-4">
+                                @*<div class="col-md-4">
                                     <label><i style="color:green" class="fa fa-check"></i>Check In</label>
                                     <input type="radio" name="Status" value="In" />
                                     <label><i style="color:red" class="fa fa-times"></i>Check Out</label>
                                     <input type="radio" name="Status" value="Out" />
-                                </div>
+                                </div>*@
                             </div>
                             <div class="col-md-6 offset-sm-4">
                                 <button type="submit" class="btn btn-primary col-md-8" style="margin-top:30px" onclick="return confirm('Do you want to Save ..')"><i class="fa fa-plus"></i> Save</button>

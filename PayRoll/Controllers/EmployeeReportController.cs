@@ -249,6 +249,7 @@ namespace PayRoll.Controllers
 
                     var Userid = _context.Database.SqlQuery<int>("SELECT USERINFO.USERID FROM USERINFO INNER JOIN Employees ON USERINFO.NAME = Employees.EmpCode WHERE(USERINFO.NAME = '" + Emp[i] + "')").SingleOrDefault();
                     var RestDay = _context.Database.SqlQuery<string>("SELECT offDay FROM Employees WHERE(EmployeeStatus = 'Active') AND (comid = '"+ Session["Comid"] + "') AND (EmpCode = '" + Emp[i] + "')").SingleOrDefault();
+                    var EmployeeAcc = _context.Database.SqlQuery<int>("SELECT EmployeeAcc FROM Employees WHERE(EmployeeStatus = 'Active') AND (comid = '" + Session["Comid"] + "') AND (EmpCode = '" + Emp[i] + "')").SingleOrDefault();
                     int Roaster = _context.Database.SqlQuery<int>("SELECT Roasterid FROM Employees WHERE(EmployeeStatus = 'Active') AND (comid = '" + Session["Comid"] + "') AND (EmpCode = '"+ Emp[i] +"')").SingleOrDefault();
                     switch (DayOfWeek.DayOfWeek.ToString())
                     {
@@ -440,6 +441,15 @@ namespace PayRoll.Controllers
                     if (DayOfWeek.DayOfWeek.ToString() == RestDay)
                     {
                         Final = "RestDay";
+                    }
+                    //LeaveRequest
+                    var Requests = _context.LeaveRequest.SqlQuery("SELECT * FROM LeaveRequests WHERE (Status = 'Approved') AND (EmployeeAcc = "+ EmployeeAcc + ") ").ToList();
+                    foreach (var Re in Requests)
+                    {
+                        if (Convert.ToDateTime(Re.StDate) >= DayOfWeek && Convert.ToDateTime(Re.StDate) <= DayOfWeek)
+                        {
+                            Final = "Leave";
+                        }
                     }
                     //Query
                     _context.Database.ExecuteSqlCommand("INSERT INTO EmployeeAttendanceReports(Date, DateName, DateTimeIn, DateTimeout, CheckIn, CheckOut, Final,EmpCode,Calenderid,OverTime,ShiftName,ShiftStartTime,ShiftEndTime) VALUES " +

@@ -36,7 +36,7 @@
                                         <th class="center">Roaster</th>
                                         <th class="center">CheckIn Time</th>
                                         <th class="center">CheckOut Time</th>
-                                        <th class="center">OverTime</th>
+                                        @*<th class="center">OverTime</th>*@
                                         <th class="center">Status</th>
                                     </tr>
                                 </thead>
@@ -68,14 +68,14 @@
                                                 <td><span style="color:green">@Convert.ToDateTime(lst.DateTimeout).ToString("hh:mm:ss tt")</span></td>
                                             }
                                             @*Ot*@
-                                            @if (lst.OverTime > 0 && lst.OverTime != 540)
+                                            @*@if (lst.OverTime > 0 && lst.OverTime != 540)
                                             {
                                                 <td>@(lst.OverTime/60)H:@(lst.OverTime%60)M </td>
                                             }
                                             else
                                             {
                                                 <td>0</td>
-                                            }
+                                            }*@
                                             @*status*@
                                             @if (lst.Final == "Present")
                                             {
